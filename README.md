@@ -1,4 +1,4 @@
-# High-Performance Speech Emotion Recognition using HuBERT-Large
+# Speech Emotion Recognition (SER) using HuBERT-Large
 
 This repository provides an open-source implementation of a highly accurate Speech Emotion Recognition (SER) system based on the **HuBERT-Large** architecture. It is designed to classify audio sequences into three fundamental emotion categories: **Positive, Neutral, and Negative**.
 
