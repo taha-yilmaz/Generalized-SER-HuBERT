@@ -1,0 +1,85 @@
+# ===================================================================
+# HR Multimodal Pipeline - Central Configuration
+# ===================================================================
+# Edit this file for your environment.
+
+# --- General Settings ---
+general:
+  device: "auto"                # "auto" → mps > cuda > cpu tries in order
+  seed: 42
+  output_dir: "./pipeline_output"
+  log_level: "INFO"
+
+# --- MCP Server Transport ---
+mcp_servers:
+  transport: "stdio"            # "stdio" (lokal) veya "sse" (cloud)
+
+# --- Stream 1: Resume Analysis (Gemini 2.5 Flash) ---
+resume:
+  gemini_api_key: ""   # Get from Google AI Studio
+  gemini_model: ""
+
+# --- Stream 2: Speech-to-Text (Whisper) ---
+speech_recognition:
+  model_size: "large"           # "base", "medium", "large", "large-v3"
+  language: null                # "tr" Turkish, "en" English, null = auto
+
+# --- Stream 3: Speech Emotion Analysis (HuBERT) ---
+speech_emotion:
+  # Your trained HuBERT model (directory)
+  # Must contain config.json, preprocessor_config.json, model.safetensors
+  model_dir: "./models/HuBERT_SER"
+  labels:
+    0: "negative"
+    1: "neutral"
+    2: "positive"
+  chunk_duration_sec: 5         # Audio chunk duration (seconds)
+
+# --- Stream 4: Facial Expression Analysis ---
+facial_emotion:
+  fer_model_path: "./models/effnetv2s_hybrid_mouth_occluded.pt"
+  yolo_model_path: "./models/yolov11n-face.pt"
+  emotion_classes:
+    - "angry"
+    - "disgust"
+    - "fear"
+    - "happy"
+    - "neutral"
+    - "sad"
+    - "surprise"
+  face_conf_threshold: 0.45
+  smoothing_window: 5
+  process_every_n_frames: 2     # 1 = every frame, 2 = half frames (~15 FPS sample, ~40% faster)
+
+# --- Fusion (Weighted Aggregation) ---
+fusion:
+  weights:
+    resume_score: 0.30
+    transcript_score: 0.25
+    speech_emotion: 0.20
+    facial_emotion: 0.25
+
+  # Facial emotion to positivity score mapping
+  facial_emotion_valence:
+    happy: 1.0
+    surprise: 0.7
+    neutral: 0.5
+    sad: 0.2
+    fear: 0.15
+    angry: 0.1
+    disgust: 0.05
+
+  # Speech emotion to positivity score mapping
+  speech_emotion_valence:
+    positive: 1.0
+    neutral: 0.5
+    negative: 0.1
+
+tts:
+  model_dir: "./models/tts"
+  tr_model: "tr_TR-dfki-medium"
+  en_model: "en_US-lessac-medium"
+  cache_dir: "./tts_cache"
+ollama:
+  url: "http://localhost:11434/api/generate"
+  model: "gemma4:e4b"
