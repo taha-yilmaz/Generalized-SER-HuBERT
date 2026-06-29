@@ -160,3 +160,12 @@ Segments:
 This implementation was developed as part of an advanced AI HR pipeline integration. If you utilize this model or architecture, please consider referencing this repository.
 
 *This project is licensed under the MIT License.*
+
+---
+
+## 📚 References
+
+The following papers were referenced in the development of this project:
+- [Investigating HuBERT-based Speech Emotion Recognition Generalisation Capability](https://doi.org/10.1007/978-3-031-84353-2_16)
+- [Review and Comparative Analysis of Databases for Speech Emotion Recognition](https://doi.org/10.3390/data10100164)
+
